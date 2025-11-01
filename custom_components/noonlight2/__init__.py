@@ -215,9 +215,13 @@ class NoonlightIntegration:
 
         if self._alarm is None:
             try:
+                # Determine name (user_name preferred, fallback to Alarm System)
+                user_name = self.config.get("user_name")
+                alarm_name = user_name if user_name else "Alarm System"
+
                 # Base payload
                 alarm_body = {
-                    "name": "Home Assistant Alarm",
+                    "name": alarm_name,
                     "phone": self.config[CONF_PHONE_NUMBER],
                 }
 

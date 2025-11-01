@@ -15,6 +15,7 @@ DEFAULT_API_ENDPOINT = "https://api.noonlight.com/dispatch/v1"
 
 CONF_SERVER_TOKEN = "server_token"
 CONF_API_ENDPOINT = "api_endpoint"
+CONF_USER_NAME = "user_name"
 CONF_PHONE_NUMBER = "phone_number"
 CONF_ADDRESS_LINE1 = "address1"
 CONF_ADDRESS_LINE2 = "address2"

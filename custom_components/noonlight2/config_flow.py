@@ -20,6 +20,7 @@ from .const import (
     CONF_STATE,
     CONF_ZIP,
     CONF_COUNTRY,
+    CONF_USER_NAME,
     DEFAULT_API_ENDPOINT,
     DEFAULT_NAME,
     DOMAIN,
@@ -114,28 +115,48 @@ async def _async_build_noonlight_schema(
     if user_input is None:
         user_input = {}
 
-    def _get_default(key: str, fallback_default: Any = None) -> None:
+    def _get_default(key: str, fallback_default: Any = None) -> Any:
         """Gets default value for key."""
         return user_input.get(key, default_dict.get(key, fallback_default))
 
     build_schema = vol.Schema(
         {
+            # Integration name
             vol.Required(
                 CONF_NAME,
                 default=_get_default(CONF_NAME),
             ): selector.TextSelector(selector.TextSelectorConfig()),
+
+            # User's full name
+            vol.Required(
+                CONF_USER_NAME,
+                description={"name": "Your Name"},
+                default=_get_default(CONF_USER_NAME),
+            ): selector.TextSelector(selector.TextSelectorConfig()),
+
+            # Server token
             vol.Required(
                 CONF_SERVER_TOKEN,
                 default=_get_default(CONF_SERVER_TOKEN),
             ): selector.TextSelector(selector.TextSelectorConfig()),
+
+            # Phone number (validated)
             vol.Required(
                 CONF_PHONE_NUMBER,
-                default=_get_default(CONF_PHONE_NUMBER),
+                description={
+                    "name": "Phone Number (14385550000)",
+                    "suggested_value": _get_default(CONF_PHONE_NUMBER),
+                },
             ): selector.TextSelector(selector.TextSelectorConfig()),
+
+
+            # API endpoint
             vol.Required(
                 CONF_API_ENDPOINT,
                 default=_get_default(CONF_API_ENDPOINT),
             ): selector.TextSelector(selector.TextSelectorConfig()),
+
+            # Country
             vol.Required(
                 CONF_COUNTRY,
                 default=_get_default(CONF_COUNTRY),
@@ -146,7 +167,9 @@ async def _async_build_noonlight_schema(
                     custom_value=False,
                     mode=selector.SelectSelectorMode.LIST,
                 )
-            ),            
+            ),
+
+            # Location mode
             vol.Required(
                 CONF_LOCATION_MODE,
                 default=_get_default(CONF_LOCATION_MODE),
