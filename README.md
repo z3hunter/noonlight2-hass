@@ -70,18 +70,11 @@ Setup requires a U.S. or Canada based mobile phone number and a Noonlight develo
 
 ### Method 1: Manual Installation
 
-1. Copy the `custom_components/noonlight` folder to your Home Assistant's `custom_components` directory
+1. Copy the `custom_components/noonlight2` folder to your Home Assistant's `custom_components` directory
 2. Restart Home Assistant
 3. Go to Settings → Devices & Services → Add Integration
 4. Search for "Noonlight" and configure with your server token and phone number
 
-### Method 2: HACS (if supported)
-
-1. Add this repository to HACS as a custom repository
-2. Install the Noonlight integration through HACS
-3. Restart Home Assistant
-4. Go to Settings → Devices & Services → Add Integration
-5. Search for "Noonlight" and configure with your server token and phone number
 
 ## Automation Examples
 
