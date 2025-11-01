@@ -11,5 +11,5 @@
   "issue_tracker": "https://github.com/z3hunter/noonlight2-hass/issues",
   "requirements": ["noonlight>=0.1.1"],
   "single_config_entry": true,
-  "version":"2.0.1"
+  "version": "2.0.1"
 }
