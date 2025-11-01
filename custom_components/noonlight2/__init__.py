@@ -169,6 +169,7 @@ class NoonlightIntegration:
         self.addcity = self.config.get(CONF_CITY, "")
         self.addstate = self.config.get(CONF_STATE, "")
         self.addzip = self.config.get(CONF_ZIP, "")
+        self.addcountry = self.config.get(CONF_COUNTRY, "")
 
     @property
     def latitude(self):

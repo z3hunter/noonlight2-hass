@@ -308,23 +308,23 @@ async def _async_build_address_schema_US(
 async def _async_build_address_schema_CA(
     hass: HomeAssistant, user_input: list, default_dict: list
 ) -> Any:
-    """Gets a schema using the default_dict as a backup."""
+    """Gets a schema for Canadian addresses using correct keys but localized labels."""
     if user_input is None:
         user_input = {}
 
-    def _get_default(key: str, fallback_default: Any = None) -> None:
+    def _get_default(key: str, fallback_default: Any = None) -> Any:
         """Gets default value for key."""
         return user_input.get(key, default_dict.get(key, fallback_default))
-    CONF_STATE = "Province"
-    CONF_ZIP = "Postal Code"
+
     build_schema = vol.Schema({})
 
+    # Address line 1
     if _get_default(CONF_ADDRESS_LINE1) is None:
         build_schema = build_schema.extend(
             {
-                vol.Required(
-                    CONF_ADDRESS_LINE1,
-                ): selector.TextSelector(selector.TextSelectorConfig()),
+                vol.Required(CONF_ADDRESS_LINE1): selector.TextSelector(
+                    selector.TextSelectorConfig()
+                ),
             }
         )
     else:
@@ -336,12 +336,14 @@ async def _async_build_address_schema_CA(
                 ): selector.TextSelector(selector.TextSelectorConfig()),
             }
         )
+
+    # Address line 2 (optional)
     if _get_default(CONF_ADDRESS_LINE2) is None:
         build_schema = build_schema.extend(
             {
-                vol.Optional(
-                    CONF_ADDRESS_LINE2,
-                ): selector.TextSelector(selector.TextSelectorConfig()),
+                vol.Optional(CONF_ADDRESS_LINE2): selector.TextSelector(
+                    selector.TextSelectorConfig()
+                ),
             }
         )
     else:
@@ -353,12 +355,14 @@ async def _async_build_address_schema_CA(
                 ): selector.TextSelector(selector.TextSelectorConfig()),
             }
         )
+
+    # City
     if _get_default(CONF_CITY) is None:
         build_schema = build_schema.extend(
             {
-                vol.Required(
-                    CONF_CITY,
-                ): selector.TextSelector(selector.TextSelectorConfig()),
+                vol.Required(CONF_CITY): selector.TextSelector(
+                    selector.TextSelectorConfig()
+                ),
             }
         )
     else:
@@ -370,11 +374,14 @@ async def _async_build_address_schema_CA(
                 ): selector.TextSelector(selector.TextSelectorConfig()),
             }
         )
+
+    # Province (stored as CONF_STATE)
     if _get_default(CONF_STATE) is None:
         build_schema = build_schema.extend(
             {
                 vol.Required(
                     CONF_STATE,
+                    description={"name": "Province"},
                 ): selector.SelectSelector(
                     selector.SelectSelectorConfig(
                         options=PROVINCES,
@@ -382,7 +389,7 @@ async def _async_build_address_schema_CA(
                         custom_value=False,
                         mode=selector.SelectSelectorMode.DROPDOWN,
                     )
-                )
+                ),
             }
         )
     else:
@@ -391,6 +398,7 @@ async def _async_build_address_schema_CA(
                 vol.Required(
                     CONF_STATE,
                     default=_get_default(CONF_STATE),
+                    description={"name": "Province"},
                 ): selector.SelectSelector(
                     selector.SelectSelectorConfig(
                         options=PROVINCES,
@@ -398,14 +406,17 @@ async def _async_build_address_schema_CA(
                         custom_value=False,
                         mode=selector.SelectSelectorMode.DROPDOWN,
                     )
-                )
+                ),
             }
         )
+
+    # Postal Code (stored as CONF_ZIP)
     if _get_default(CONF_ZIP) is None:
         build_schema = build_schema.extend(
             {
                 vol.Required(
                     CONF_ZIP,
+                    description={"name": "Postal Code"},
                 ): selector.TextSelector(selector.TextSelectorConfig()),
             }
         )
@@ -415,6 +426,7 @@ async def _async_build_address_schema_CA(
                 vol.Required(
                     CONF_ZIP,
                     default=_get_default(CONF_ZIP),
+                    description={"name": "Postal Code"},
                 ): selector.TextSelector(selector.TextSelectorConfig()),
             }
         )

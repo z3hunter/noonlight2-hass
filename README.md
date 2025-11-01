@@ -151,7 +151,6 @@ This is a community-maintained fork. For issues:
 - Add support for the "Cancel" function of the alarm
 - Allow to clear the alarm status from client side (force turn off switch)
 - Add support for the "Other" type of emergency
-- Confirm canada (API refuse location for now)
 
 
 ## Warnings & Disclaimers
