@@ -145,12 +145,14 @@ This is a community-maintained fork. For issues:
 - Test with the original Konnected.io integration to isolate issues
 
 ## Todo
-- Check phone number format and show error message if invalid (1NPANXXXXXX)
-- Remove dependencies on the python noonlight package
-- Add support for the "Instruction" field
+- Add support for multiple contacts
 - Add support for the "Cancel" function of the alarm
 - Allow to clear the alarm status from client side (force turn off switch)
+
+### Low priority todo
+- Check phone number format and show error message if invalid (1NPANXXXXXX)
 - Add support for the "Other" type of emergency
+- Remove dependencies on the python noonlight package
 
 
 ## Warnings & Disclaimers
@@ -163,6 +165,6 @@ This is a community-maintained fork. For issues:
 
 **This integration is provided as-is without warranties of any kind. Using Noonlight with Home Assistant involves multiple service providers and potential points of failure, including (but not limited to) your internet service provider, 3rd party hosting services, and the Home Assistant software platform.**
 
-**This is a community-maintained fork that bypasses Konnected.io's services. While this provides more control, it also means less testing and support than the original integration.**
+**This is a community-maintained fork that bypasses Konnected.io's services. While this provides more control, it also means less testing and support than the original integration. Use at your own risks.**
 
 Please read and understand the [Noonlight terms of use](https://noonlight.com/terms) and [Home Assistant terms of Service](https://www.home-assistant.io/tos/), each of which include important limitations of liability and indemnification provisions.
