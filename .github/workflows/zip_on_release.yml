@@ -50,14 +50,14 @@ jobs:
         if: ${{ github.event_name == 'release' }}
         uses: Roang-zero1/github-upload-release-artifacts-action@v3.0.0
         with:
-          args: ./noonlight2.zip
+          args: ./custom_components/noonlight2/noonlight2.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      
       - name: Add Zip to Action
         if: ${{ github.event_name == 'workflow_dispatch' }}
         uses: actions/upload-artifact@v4.4.3
         with:
           name: noonlight2
-          path: ./noonlight2.zip
+          path: ./custom_components/noonlight2/noonlight2.zip
           if-no-files-found: error
