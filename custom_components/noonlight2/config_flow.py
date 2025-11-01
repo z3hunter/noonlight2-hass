@@ -431,13 +431,16 @@ class Noonlight2ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._entry = None
 
     async def async_step_user(
-        self, user_input: dict[str, Any] | None = None, yaml_import=False
+        self, user_input: dict[str, Any] | None = None, yaml_import: bool = False
     ) -> ConfigFlowResult:
         """Handle the initial step."""
 
         self._errors = {}
+
+        # User has submitted something
         if user_input is not None:
             self._data.update(user_input)
+
             if yaml_import:
                 self._data.update(
                     {
@@ -451,34 +454,35 @@ class Noonlight2ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return self.async_create_entry(
                     title=self._data[CONF_NAME], data=self._data
                 )
+
             _LOGGER.debug(f"[async_step_user] self._data: {self._data}")
+
+            # route based on country and mode
             if self._data.get(CONF_LOCATION_MODE) == "latlong":
                 return await self.async_step_latlong()
-            else:
-                return await self.async_step_address()
 
-        # Defaults
+            elif self._data.get(CONF_LOCATION_MODE) == "address":
+                # make sure country was chosen
+                if self._data.get(CONF_COUNTRY) == "US":
+                    return await self.async_step_address()
+                elif self._data.get(CONF_COUNTRY) == "CA":
+                    return await self.async_step_address()
+                else:
+                    self._errors["base"] = "invalid_country"
+
+        # first time or invalid input: show the initial form
         defaults = {
             CONF_NAME: DEFAULT_NAME,
             CONF_API_ENDPOINT: DEFAULT_API_ENDPOINT,
         }
 
-        if self._data.get(CONF_COUNTRY) == "US":
-            return self.async_show_form(
-                step_id="address",
-                data_schema=await _async_build_address_schema_US(
-                    self.hass, user_input, defaults
-                ),
-                errors=self._errors,
-            )
-        elif self._data.get(CONF_COUNTRY) == "CA":
-            return self.async_show_form(
-                step_id="address",
-                data_schema=await _async_build_address_schema_CA(
-                    self.hass, user_input, defaults
-                ),
-                errors=self._errors,
-            )
+        return self.async_show_form(
+            step_id="user",
+            data_schema=await _async_build_noonlight_schema(
+                self.hass, user_input, defaults
+            ),
+            errors=self._errors,
+        )
 
     async def async_step_address(
         self, user_input: dict[str, Any] | None = None
