@@ -36,7 +36,7 @@ jobs:
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
-          filename: 'noonlight.zip'
+          filename: 'noonlight2.zip'
           directory: ./custom_components/noonlight
       - name: Upload Zip to Release
         if: ${{ github.event_name == 'release' }}
