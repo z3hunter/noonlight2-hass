@@ -21,6 +21,7 @@ from .const import (
     CONF_ZIP,
     CONF_COUNTRY,
     CONF_USER_NAME,
+    CONF_PIN,
     DEFAULT_API_ENDPOINT,
     DEFAULT_NAME,
     DOMAIN,
@@ -140,7 +141,7 @@ async def _async_build_noonlight_schema(
                 default=_get_default(CONF_SERVER_TOKEN),
             ): selector.TextSelector(selector.TextSelectorConfig()),
 
-            # Phone number (validated)
+            # Phone number
             vol.Required(
                 CONF_PHONE_NUMBER,
                 description={
@@ -149,6 +150,14 @@ async def _async_build_noonlight_schema(
                 },
             ): selector.TextSelector(selector.TextSelectorConfig()),
 
+            # PIN
+            vol.Required(
+                CONF_PIN,
+                description={"name": "Security PIN (4–6 digits)"},
+                default=_get_default(CONF_PIN),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
+            ),
 
             # API endpoint
             vol.Required(

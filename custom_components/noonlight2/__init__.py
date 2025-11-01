@@ -161,6 +161,7 @@ class NoonlightIntegration:
         self.hass = hass
         self.config = conf
         self._alarm = None
+        self.pin = self.config.get("pin", "")
         self._websession = async_get_clientsession(self.hass)
         self.api_endpoint = self.config[CONF_API_ENDPOINT]
         self.server_token = self.config[CONF_SERVER_TOKEN]
@@ -224,6 +225,10 @@ class NoonlightIntegration:
                     "name": alarm_name,
                     "phone": self.config[CONF_PHONE_NUMBER],
                 }
+
+                # Add PIN
+                if self.pin:
+                    alarm_body["pin"] = self.pin
 
                 # Add address or coordinates
                 if len(self.addline1) > 0:
