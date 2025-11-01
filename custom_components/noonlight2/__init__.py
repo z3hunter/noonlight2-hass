@@ -41,7 +41,6 @@ from .const import (
     DOMAIN,
     EVENT_NOONLIGHT_ALARM_CANCELED,
     EVENT_NOONLIGHT_ALARM_CREATED,
-    EVENT_NOONLIGHT_TOKEN_REFRESHED,
     NOTIFICATION_ALARM_CREATE_FAILURE,
     PLATFORMS,
 )
@@ -115,10 +114,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = noonlight_integration
 
+    #
+    # Modified service handler to support instruction text
+    #
     async def handle_create_alarm_service(call):
-        """Create a noonlight alarm from a service"""
+        """Create a Noonlight alarm from a service call."""
         service = call.data.get("service", None)
-        await noonlight_integration.create_alarm(alarm_types=[service])
+        instruction = call.data.get("instruction")  # new optional field
+        await noonlight_integration.create_alarm(
+            alarm_types=[service],
+            instruction=instruction,
+        )
 
     hass.services.async_register(
         DOMAIN, CONST_NOONLIGHT_HA_SERVICE_CREATE_ALARM, handle_create_alarm_service
@@ -139,13 +145,11 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
         hass.data.pop(DOMAIN)
-
     return unload_ok
 
 
 class NoonlightException(HomeAssistantError):
     """General exception for Noonlight Integration."""
-
     pass
 
 
@@ -171,25 +175,21 @@ class NoonlightIntegration:
 
     @property
     def latitude(self):
-        """Return latitude from the Home Assistant configuration."""
         return self.config.get(CONF_LATITUDE, self.hass.config.latitude)
 
     @property
     def longitude(self):
-        """Return longitude from the Home Assistant configuration."""
         return self.config.get(CONF_LONGITUDE, self.hass.config.longitude)
 
     @property
     def headers(self):
-        """Return headers for Noonlight API requests."""
         return {
             "Authorization": f"Bearer {self.server_token}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
 
     async def check_api_token(self, force_renew=False):
         """Check if server token is valid."""
-        # Server tokens don't expire, just verify the token is present
         return bool(self.server_token)
 
     async def update_alarm_status(self):
@@ -201,27 +201,27 @@ class NoonlightIntegration:
                     if resp.status == 200:
                         alarm_data = await resp.json()
                         self._alarm.update(alarm_data)
-                        return alarm_data.get('status')
+                        return alarm_data.get("status")
             except Exception as e:
                 _LOGGER.error(f"Failed to update alarm status: {e}")
         return None
 
-    async def create_alarm(self, alarm_types=["police"]):
-        """Create a new alarm using direct Noonlight API"""
+    async def create_alarm(self, alarm_types=["police"], instruction: str | None = None):
+        """Create a new alarm using direct Noonlight API."""
         services = {}
         for alarm_type in alarm_types or ():
             if alarm_type in ["police", "fire", "medical"]:
                 services[alarm_type] = True
-        
+
         if self._alarm is None:
             try:
-                # Build alarm payload
+                # Base payload
                 alarm_body = {
                     "name": "Home Assistant Alarm",
                     "phone": self.config[CONF_PHONE_NUMBER],
                 }
-                
-                # Add location
+
+                # Add address or coordinates
                 if len(self.addline1) > 0:
                     alarm_body["location"] = {
                         "address": {
@@ -242,49 +242,63 @@ class NoonlightIntegration:
                             "accuracy": 5,
                         }
                     }
-                
-                # Add services if specified
+
+                # Add services
                 if len(services) > 0:
                     alarm_body["services"] = services
-                
-                # Make API call to create alarm
+
+                # Add instruction 
+                if instruction:
+                    alarm_body["instructions"] = {"entry": instruction}
+
+                # Send API request
                 url = f"{self.api_endpoint}/alarms"
-                async with self._websession.post(url, json=alarm_body, headers=self.headers) as resp:
+                async with self._websession.post(
+                    url, json=alarm_body, headers=self.headers
+                ) as resp:
                     if resp.status == 201:
                         self._alarm = await resp.json()
-                        _LOGGER.info(f"Alarm created successfully: {self._alarm.get('id')}")
+                        _LOGGER.info(
+                            f"Alarm created successfully: {self._alarm.get('id')}"
+                        )
                     else:
                         error_text = await resp.text()
                         raise Exception(f"API returned {resp.status}: {error_text}")
-                        
+
             except Exception as client_error:
                 persistent_notification.create(
                     self.hass,
                     "Failed to send an alarm to Noonlight!\n\n"
-                    "({}: {})".format(type(client_error).__name__, str(client_error)),
+                    f"({type(client_error).__name__}: {client_error})",
                     "Noonlight Alarm Failure",
                     NOTIFICATION_ALARM_CREATE_FAILURE,
                 )
                 return
-                
-            if self._alarm and self._alarm.get('status') == CONST_ALARM_STATUS_ACTIVE:
+
+            # Active alarm monitoring
+            if self._alarm and self._alarm.get("status") == CONST_ALARM_STATUS_ACTIVE:
                 async_dispatcher_send(self.hass, EVENT_NOONLIGHT_ALARM_CREATED)
                 _LOGGER.debug(
-                    "noonlight alarm has been initiated. " "id: %s status: %s",
-                    self._alarm.get('id'),
-                    self._alarm.get('status'),
+                    "Noonlight alarm initiated. id: %s status: %s",
+                    self._alarm.get("id"),
+                    self._alarm.get("status"),
                 )
+
                 cancel_interval = None
 
                 async def check_alarm_status_interval(now):
-                    _LOGGER.debug("checking alarm status...")
-                    if await self.update_alarm_status() == CONST_ALARM_STATUS_CANCELED:
-                        _LOGGER.debug("alarm %s has been canceled!", self._alarm.get('id'))
+                    _LOGGER.debug("Checking alarm status...")
+                    if (
+                        await self.update_alarm_status()
+                        == CONST_ALARM_STATUS_CANCELED
+                    ):
+                        _LOGGER.debug(
+                            "Alarm %s has been canceled!", self._alarm.get("id")
+                        )
                         if cancel_interval is not None:
                             cancel_interval()
-                        if self._alarm is not None:
-                            if self._alarm.get('status') == CONST_ALARM_STATUS_CANCELED:
-                                self._alarm = None
+                        if self._alarm and self._alarm.get("status") == CONST_ALARM_STATUS_CANCELED:
+                            self._alarm = None
                         async_dispatcher_send(self.hass, EVENT_NOONLIGHT_ALARM_CANCELED)
 
                 cancel_interval = async_track_time_interval(
