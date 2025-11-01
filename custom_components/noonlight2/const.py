@@ -5,7 +5,7 @@ from noonlight import (
     NOONLIGHT_SERVICES_POLICE,
 )
 
-VERSION = "v2.0.1"
+VERSION = "2.0.1"
 DOMAIN = "noonlight2"
 
 PLATFORMS = [Platform.SWITCH]
