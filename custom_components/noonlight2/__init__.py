@@ -95,7 +95,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         translation_key="deprecated_yaml",
         translation_placeholders={
             "domain": DOMAIN,
-            "integration_title": "Noonlight",
+            "integration_title": "Noonlight2",
         },
     )
 

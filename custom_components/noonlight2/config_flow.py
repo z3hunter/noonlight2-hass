@@ -421,7 +421,7 @@ async def _async_build_address_schema_CA(
 
     return build_schema
 
-class NoonlightConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class Noonlight2ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
     def __init__(self):
@@ -546,7 +546,7 @@ class NoonlightConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             or import_config.get(CONF_PHONE_NUMBER, None) is None
         ):
             _LOGGER.error(
-                f"[Noonlight] Invalid YAML Config. Cannot Import: {import_config}"
+                f"[Noonlight2] Invalid YAML Config. Cannot Import: {import_config}"
             )
             return
         _LOGGER.debug(f"[async_step_import] import_config: {import_config}")

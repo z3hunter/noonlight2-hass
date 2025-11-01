@@ -1,8 +1,8 @@
 {
-    "name": "Noonlight - Alarm Monitoring",
+    "name": "Noonlight2 - Alarm Monitoring",
     "render_readme": true,
     "country": "US",
     "homeassistant": "2024.1.0b0",
     "zip_release": true,
-    "filename": "noonlight.zip"
+    "filename": "noonlight2.zip"
 }
