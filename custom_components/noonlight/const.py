@@ -21,6 +21,7 @@ CONF_ADDRESS_LINE2 = "address2"
 CONF_CITY = "city"
 CONF_STATE = "state"
 CONF_ZIP = "zip"
+CONF_COUNTRY = "country"
 CONF_LOCATION_MODE = "location_mode"
 
 CONST_ALARM_STATUS_ACTIVE = "ACTIVE"

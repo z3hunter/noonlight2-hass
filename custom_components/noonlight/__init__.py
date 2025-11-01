@@ -34,6 +34,7 @@ from .const import (
     CONF_SERVER_TOKEN,
     CONF_STATE,
     CONF_ZIP,
+    CONF_COUNTRY,
     CONST_ALARM_STATUS_ACTIVE,
     CONST_ALARM_STATUS_CANCELED,
     CONST_NOONLIGHT_HA_SERVICE_CREATE_ALARM,
@@ -62,6 +63,7 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Optional(CONF_CITY): cv.string,
                 vol.Optional(CONF_STATE): cv.string,
                 vol.Optional(CONF_ZIP): cv.string,
+                vol.Optional(CONF_COUNTRY): cv.string,
                 vol.Inclusive(
                     CONF_LATITUDE, "coordinates", "Include both latitude and longitude"
                 ): cv.latitude,
@@ -228,6 +230,7 @@ class NoonlightIntegration:
                             "city": self.addcity,
                             "state": self.addstate,
                             "zip": self.addzip,
+                            "country": self.addcountry,
                         }
                     }
                     if len(self.addline2) > 0:
