@@ -144,6 +144,16 @@ This is a community-maintained fork. For issues:
 - Review Home Assistant logs for error details
 - Test with the original Konnected.io integration to isolate issues
 
+## Todo
+- Check phone number format and show error message if invalid (1NPANXXXXXX)
+- Remove dependencies on the python noonlight package
+- Add support for the "Instruction" field
+- Add support for the "Cancel" function of the alarm
+- Allow to clear the alarm status from client side (force turn off switch)
+- Add support for the "Other" type of emergency
+- Confirm canada (API refuse location for now)
+
+
 ## Warnings & Disclaimers
 
 <p class='note warning'>
