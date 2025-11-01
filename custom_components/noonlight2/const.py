@@ -1,5 +1,5 @@
 from homeassistant.const import Platform
-from noonlight import (
+from noonlight2 import (
     NOONLIGHT_SERVICES_FIRE,
     NOONLIGHT_SERVICES_MEDICAL,
     NOONLIGHT_SERVICES_POLICE,
