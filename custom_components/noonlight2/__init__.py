@@ -197,7 +197,7 @@ class NoonlightIntegration:
         """Update the status of the current alarm."""
         if self._alarm is not None:
             try:
-                url = f"{self.api_endpoint}/alarms/{self._alarm['id']}"
+                url = f"{self.api_endpoint}/alarms/{self._alarm['id']}/status"
                 async with self._websession.get(url, headers=self.headers) as resp:
                     if resp.status == 200:
                         alarm_data = await resp.json()
