@@ -1,0 +1,15 @@
+{
+  "domain": "noonlight2",
+  "name": "Noonlight2",
+  "after_dependencies": [],
+  "codeowners": ["@heythisisnate", "@snicker", "@Snuffy2", "@Tecnico1931", "@MatthewBCooke"],
+  "config_flow": true,
+  "dependencies": ["http", "switch"],
+  "documentation": "https://github/z3hunter/noonlight2-hass",
+  "integration_type": "device",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/z3hunter/noonlight2-hass/issues",
+  "requirements": ["noonlight>=0.1.1"],
+  "single_config_entry": true,
+  "version":"v2.0.1"
+}

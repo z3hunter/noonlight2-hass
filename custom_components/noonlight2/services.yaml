@@ -14,3 +14,11 @@ create_alarm:
             - "police"
             - "fire"
             - "medical"
+    instruction:
+      name: Instruction
+      description: Optional instructions or notes to include with the Noonlight alarm (e.g., "Intruder in the garage" or "Smoke in kitchen").
+      required: false
+      example: "Front door forced open, dog inside."
+      selector:
+        text:
+          multiline: true

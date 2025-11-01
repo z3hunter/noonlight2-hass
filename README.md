@@ -4,7 +4,7 @@ This is a modified version of the [Noonlight](https://noonlight.com) integration
 
 [Noonlight](https://noonlight.com) connects your smart home to local emergency services to help keep you safe in case of a break-in, fire, or medical emergency.
 
-### Noonlight service is currently only available in the United States
+### Noonlight service is currently only available in the United States & Canada
 
 ## Key Differences from Original
 
@@ -16,7 +16,7 @@ This fork removes the dependency on Konnected.io's intermediary service and conn
 
 ## How it Works
 
-Noonlight connects to emergency 9-1-1 services in all 50 U.S. states. Backed by a UL-compliant alarm monitoring center and staffed 24/7 with live operators in the United States, Noonlight is standing by to send help to your home at a moment's notice.
+Noonlight connects to emergency 9-1-1 services in all U.S. states and Canadian provinces. Backed by a UL-compliant alarm monitoring center and staffed 24/7 with live operators in the United States, Noonlight is standing by to send help to your home at a moment's notice.
 
 When integrated with Home Assistant, a **Noonlight Alarm** switch will appear in your list of entities. When the Noonlight Alarm switch is turned _on_, this will send an emergency signal to Noonlight. You will be contacted by text and voice at the phone number you configure. If you confirm the emergency with the Noonlight operator, or if you're unable to respond, Noonlight will dispatch local emergency services to your home using the [longitude and latitude coordinates](https://www.home-assistant.io/docs/configuration/basic/#latitude) specified in your Home Assistant configuration or an address you specify in the Noonlight configuration.
 
@@ -28,7 +28,7 @@ The _Noonlight Switch_ can be activated by any Home Assistant automation, just l
 
 ## Initial set up
 
-Setup requires a U.S. based mobile phone number and a Noonlight developer account.
+Setup requires a U.S. or Canada based mobile phone number and a Noonlight developer account.
 
 1. Ensure that your [longitude and latitude coordinates](https://www.home-assistant.io/docs/configuration/basic/#latitude) are set accurately so that Noonlight knows where to send help.
 
@@ -62,9 +62,9 @@ Setup requires a U.S. based mobile phone number and a Noonlight developer accoun
 
 * `City`: City/town name
 
-* `State`: Two-letter state abbreviation
+* `State\Province`: Two-letter state or province abbreviation
 
-* `Zip`: Zip code
+* `Zip\Postal Code`: Zip code or Postal Code
 
 ## Installation
 
@@ -144,6 +144,17 @@ This is a community-maintained fork. For issues:
 - Review Home Assistant logs for error details
 - Test with the original Konnected.io integration to isolate issues
 
+## Todo
+- Add support for multiple contacts
+- Add support for the "Cancel" function of the alarm
+- Allow to clear the alarm status from client side (force turn off switch)
+
+### Low priority todo
+- Check phone number format and show error message if invalid (1NPANXXXXXX)
+- Add support for the "Other" type of emergency
+- Remove dependencies on the python noonlight package
+
+
 ## Warnings & Disclaimers
 
 <p class='note warning'>
@@ -154,6 +165,6 @@ This is a community-maintained fork. For issues:
 
 **This integration is provided as-is without warranties of any kind. Using Noonlight with Home Assistant involves multiple service providers and potential points of failure, including (but not limited to) your internet service provider, 3rd party hosting services, and the Home Assistant software platform.**
 
-**This is a community-maintained fork that bypasses Konnected.io's services. While this provides more control, it also means less testing and support than the original integration.**
+**This is a community-maintained fork that bypasses Konnected.io's services. While this provides more control, it also means less testing and support than the original integration. Use at your own risks.**
 
 Please read and understand the [Noonlight terms of use](https://noonlight.com/terms) and [Home Assistant terms of Service](https://www.home-assistant.io/tos/), each of which include important limitations of liability and indemnification provisions.

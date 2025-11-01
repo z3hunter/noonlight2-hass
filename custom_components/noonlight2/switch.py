@@ -14,7 +14,7 @@ from .const import (
     EVENT_NOONLIGHT_TOKEN_REFRESHED,
 )
 
-DEFAULT_NAME = "Noonlight Switch"
+DEFAULT_NAME = "Noonlight2 Switch"
 _LOGGER = logging.getLogger(__name__)
 
 
